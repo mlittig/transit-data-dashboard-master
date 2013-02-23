@@ -1,0 +1,67 @@
+*{
+  This program is free software: you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public License
+  as published by the Free Software Foundation, either version 3 of
+  the License, or (props, at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program. If not, see <http://www.gnu.org/licenses/>. 
+}*
+#{extends 'main.html' /}
+#{set title:'Transit Data Dashboard Administration' /}
+
+<h2>Items requiring review</h2>
+
+<ul>
+    <li><a href="feedsNoAgencies">Feeds with no agencies 
+        <span class="badge badge-info">${feedsNoAgency}</span></a></li>
+    <li><a href="agenciesNoMetros">Agencies matching no metro areas 
+        <span class="badge badge-info">${agenciesNoMetro}</span></a></li>
+    <li><a href="agenciesMultiAreas">Agencies matching multiple metro areas
+        <span class="badge badge-info">${agenciesMultiAreas}</span></a></li>
+    <li>Metro areas needing rebuild
+        <form action="rebuildMetrosNeedingRebuild" method="POST">
+            <input type="submit" class="btn btn-mini" value="Rebuild all" />
+        </form> 
+        <span class="badge badge-info">${metrosNeedingUpdate}</span></a></li>
+    <li><a href="unmatchedMetro">Unmatched metro areas
+        <span class="badge badge-info">${unmatchedMetro}</span></a></li>
+    <li><a href="unmatchedPrivate">Unmatched private GTFS agencies 
+        <span class="badge badge-info">${unmatchedPrivate}</span></a></li>
+</ul>
+
+<h2>Other tasks</h2>
+<ul>
+    <li><a href="chooseAgency?redirectTo=editRealtimeFeeds%3Fagency.id%3D">Configure real time updates</a></li>
+    <li><a href="removeUnreferencedStoredFeeds">Remove unreferenced stored feeds</a></li>
+    <li><a href="/admin/mapfeeds.html">Map feeds to agencies</a></li>
+    <li><a href="../mapper/fetchGtfs">Fetch new GTFS</a></li>
+    <li><a href="generateDeploymentPlansForAllMetros">Generate deployment plans for
+        <i>all</i> enabled metros with transit</a></li>
+    <li><a href="/crud">CRUD DB interface</a></li>
+    <li>
+        <form action="splitMetroInteractively" method="GET">
+            Split metro <input type="text" name="metroId" placeholder="metro area ID" /> into 
+            <input type="text" name="splits" placeholder="number" /> parts.
+            <input type="submit" class="btn btn-link" value="Go!"/>
+        </form>
+    </li>    
+    <li>
+        <form action="../mapper/createDeploymentPlan" method="GET">
+            Create deployment plan for <input type="text" name="metroArea.id" placeholder="metro area id">
+            using a window starting <input type="text" name="date" placeholder="yyyy-MM-dd" />
+            and lasting <input type="text" name="window" placeholder="n" /> days, and send it to
+            <input type="text" name="send" placeholder="URL" />
+            <input type="submit" class="btn" value="Go!" />
+        </form>
+    </li>
+</ul>
+        
+        
+            
+

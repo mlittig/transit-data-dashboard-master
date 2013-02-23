@@ -1,0 +1,54 @@
+*{
+  This program is free software: you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public License
+  as published by the Free Software Foundation, either version 3 of
+  the License, or (props, at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program. If not, see <http://www.gnu.org/licenses/>. 
+}*
+#{extends 'main.html' /}
+#{set title:'Split Metro Area' /}
+
+<h2>Splitting metro ${original.toString()} into ${splits}</h2>
+
+Select the agencies to include in each resulting metro:
+<form action="saveSplitMetro" method="GET">
+<input type="submit" />
+<input type="hidden" name="splits" value="${splits}" />
+<input type="hidden" name="original" value="${original.id}" />
+
+<table class="table table-striped">
+    <thead>
+        <th>Agency</th>
+        %{ for (int i = 1; i <= splits; i++) { }%
+            <th>${i}</th>
+        %{ } }%
+    </thead>
+    <tbody>
+    %{ for (agency in original.agencies) { }%
+        <tr>
+            <td title="%{ for (uzaName in agency.uzaNames) { }%${uzaName}, %{ } }%"
+                 %{ if (agency.feeds.size() > 0) { }%
+                    *{ copied from Bootstrap alert-success }*
+                    style="background-color: #dff0d8"
+                 %{ } }%>
+                 ${agency.name}</td>
+            %{ for (int i = 1; i <= splits; i++) { }%
+                <td><input type="checkbox" name="metro${i}" value="${agency.id}" /></td>
+            %{ } }%
+        </tr>
+    %{ } }%
+    </tbody>
+</table>
+<input type="submit" />
+</form>
+        
+        
+            
+

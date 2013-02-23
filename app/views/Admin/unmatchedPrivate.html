@@ -1,0 +1,50 @@
+*{
+  This program is free software: you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public License
+  as published by the Free Software Foundation, either version 3 of
+  the License, or (props, at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program. If not, see <http://www.gnu.org/licenses/>. 
+}*
+#{extends 'carousel.html' /} #{set title:'Unmatched private feeds' /}
+
+#{list items:providers, as:'provider'}
+<div class="item">
+	<table>
+		<tr>
+			<th>Name</th>
+			<td>${provider.name}</td>
+		</tr>
+		<tr>
+			<th>Latitude</th>
+			<td>${provider.lat}</td>
+		</tr>
+		<tr>
+			<th>Longitude</th>
+			<td>${provider.lon}</td>
+		</tr>
+		<tr>
+			<th>Metro Area</th>
+			<td>${provider.metroArea}</td>
+		</tr>
+	</table>
+	<div class="btn-group">
+		<a class="xhr btn"
+			href="newAgencyFromPrivate?privateProvider.id=${provider.id}">New
+			agency</a> <a href="#" class="xhr btn">Skip</a>
+	</div>
+
+	<h4>Agencies in metro</h4>
+	%{ if (provider.metroArea != null) { %} #{list
+	items:provider.metroArea.agencies, as:'agency'}
+	<li>${agency} <a class="xhr btn btn-mini"
+		href="assignPrivateToAgency?privateProvider.id=${provider.id}&agency.id=${agency.id}">
+			Assign</a></li> #{/list} %{ } %}
+</div>
+#{/list}

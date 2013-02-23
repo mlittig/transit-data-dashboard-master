@@ -1,0 +1,17 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+GET     /api/ntdagencies/agency/{id}            NtdAgencies.agency
+GET     /api/ntdagencies/agencies/{as}          NtdAgencies.agencies
+# CRUD admin area
+*    /crud/                                   module:crud
+*       /api/{controller}/{action}              {controller}.{action}   
+
+# Home page alias
+GET    /public/                               staticDir:public
+
+# Home page
+GET     /                                    staticDir:public

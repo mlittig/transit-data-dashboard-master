@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--
+  This program is free software: you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public License
+  as published by the Free Software Foundation, either version 3 of
+  the License, or (props, at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program. If not, see <http://www.gnu.org/licenses/>. 
+-->
+<html>
+  <head>
+    <title>Transit Data Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="javascripts/leaflet/leaflet.css" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="javascripts/leaflet/leaflet.ie.css" />
+    <![endif]-->
+    <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="stylesheets/main.css" />
+
+    <script src="javascripts/leaflet/leaflet.js"></script>
+    <script src="javascripts/jquery-1.7.2.min.js"></script>
+    <script src="javascripts/client.js"></script>
+    <script src="js/jquery-ui-1.8.21.custom.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand toplogo" href="http://www.openplans.org/" title="OpenPlans">
+            <img src="images/openplans.png" alt="OpenPlans" />
+          </a>
+          <a class="brand title">Transit Data Dashboard</a>
+          <ul class="nav">
+            <li class="active"><a href="#mapTab" class="tabButton" data-toggle="tab" 
+                                  id="mapTabToggle">Map</a></li>
+            <li><a href="#dataTab" class="tabButton" data-toggle="tab">Data</a></li>
+            <li>
+              <span class="shareTop shareTopTweet">
+                <!--  Not using AddThis because the URL ends up with a hash on the end -->
+                <a href="https://twitter.com/share" class="twitter-share-button" 
+                   data-url="http://transitdata.openplans.org"
+                   data-counturl="http://transitdata.openplans.org"
+                   data-text="Check out @OpenPlans site tracking open #transpo data"></a>
+              </span>
+            <li>
+              <span class="shareTop shareTopLike">
+                <a href="#" class="addthis_button_facebook_like" fb:href="http://transitdata.openplans.org" 
+                   fb:layout="button_count"></a>
+              </span>
+            </li>
+            <li>
+              <span class="shareTop shareTopPlusOne">                
+                <a href="#" class="addthis_button_google_plusone"></a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+   <div class="container">
+	<div class="hero-unit" id="preamble-before">
+	  <h2>Welcome!</h2>
+	  <p>This site tracks the availability of open data in the
+	    <abbr class="initialism" title="General Transit Feed
+	    Specification"><a href="https://developers.google.com/transit/gtfs/">GTFS</a></abbr>
+	    format for transit operators in the U.S. and Canada. The
+	    public data listed here will be used to power
+	    OpenPlans&apos; <a href="http://www.kickstarter.com/projects/228865951/transit-app-for-ios-6-and-beyond">upcoming
+	    iOS application</a>, and is available for anyone to
+	    use.</p>
+
+	  <p>Not all communities have <abbr class="initialism"
+	    title="General Transit Feed Specification">GTFS</abbr> and
+	    some choose not to release to the public.</p>
+
+	  <p>Check our database to see if transit operators in your
+	    community publish data to the public. If not, let them
+	    know that open data is important to you by registering
+	    your &ldquo;vote&rdquo;&mdash;we'll use this data to let
+	    operators know that open data is important to their
+	    riders.</p>
+	</div>
+
+      <div class="row" id="tabs">
+        <div class="span12">
+
+          <div class="tab-content">
+            <div class="tab-pane active fade in" id="mapTab">
+              <div style="width: 800px; height: 600px" id="map">Map</div>
+            </div>
+            
+            <div class="tab-pane fade" id="dataTab">
+
+              <ul class="nav nav-pills">
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Filters
+                    <span class="hidden508">(Dropdown menu)</span>
+                    <b class="caret"></b>
+                  </a>
+
+                  <ul class="dropdown-menu" id="filters">
+                    <span class="hidden508">Begin Dropdown Menu</span>
+
+                    <!-- the opposite= attribute tells the code to un-toggle that if this is 
+                         toggled -->
+                    <li>
+                      <a href="#" name="publicGtfs" opposite="noPublicGtfs">
+                        <span class="ui-icon ui-icon-blank"></span>Public GTFS
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="#" name="noPublicGtfs" opposite="publicGtfs">
+                        <span class="ui-icon ui-icon-blank"></span>No Public GTFS
+                      </a>
+                    </li>
+                    
+                    <li class="divider"></li>
+                    
+                    <li>
+                        <a href="#" name="googleGtfs" opposite="noGoogleGtfs">
+                            <span class="ui-icon ui-icon-blank"></span>Google Transit
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#" name="noGoogleGtfs" opposite="googleGtfs">
+                            <span class="ui-icon ui-icon-blank"></span>No Google Transit
+                        </a>
+                    </li>
+                    
+                    <span class="hidden508">End Dropdown Menu</span>
+                  </ul>
+                  <div class="clear"></div>
+
+                </li>
+                
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Download Data
+                    <span class="hidden508">(Dropdown menu)</span>
+                    <b class="caret"></b>
+                  </a>
+
+                  <ul class="dropdown-menu">
+                    <span class="hidden508">Begin Dropdown Menu</span>
+                    <li><a href="api/ntdagencies/agencies/CSV">CSV</a></li>
+                    <li><a href="api/ntdagencies/agencies/JSON">JSON</a></li>
+                    <span class="hidden508">End Dropdown Menu</span>
+                  </ul>
+
+              </ul>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th><a href="#" class="sortBtn" name="name" rel="tooltip" 
+                           title="The name of the agency">Agency</a></th>
+                    <th><a href="#" class="sortBtn" name="metro" rel="tooltip"
+                           title="The metropolitan area where the agency provides service">
+                        Metro Area</a></th>
+                    <th><a href="#" class="sortBtn" name="ridership" rel="tooltip"
+                           title="The number of annual unlinked passenger trips on the agency">
+                        Annual Ridership</a></th>
+                    <th><a href="#" class="sortBtn" name="passengerMiles" rel="tooltip"
+                           title="The number of annual passenger miles provided by the agency">
+                        Annual Passenger Miles</a></th>
+                    <th><a href="#" class="sortBtn" name="population" rel="tooltip"
+                           title="The population of the area the agency serves">
+                        Service Area Population</a></th>
+                    <th><a href="#" class="sortBtn" name="googleGtfs" rel="tooltip"
+                           title="Does the agency provide GTFS data to Google Transit?">
+                        Google Transit</a></th>
+                    <th><a href="#" class="sortBtn" name="publicGtfs" rel="tooltip"
+                           title="Does the agency provide open GTFS data to the public">
+                        Public GTFS</a></th>
+                    <th><a href="#" class="sortBtn" name="votes" rel="tooltip" 
+                    	   title="Number of votes for release of data">
+                    	Votes</a></th>
+                  </tr>
+
+                  <!-- clear the floating sort indicators -->
+                  <div class="clear" ></div>
+                </thead>
+                <tbody id="data">
+                  <tr id="loading">
+                    <td></td>
+                    <td colspan="5">
+                      Loading data...
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="pagination" id="page">
+                <ul>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row hidden" id="agencyInfo">
+        <div class="span12">
+          <ul class="nav nav-pills">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Download Data
+                <span class="hidden508">(dropdown menu)</span>
+                <b class="caret"></b>
+              </a>
+
+              <ul class="dropdown-menu">
+                <span class="hidden508">Begin dropdown menu</span>
+                <li><a href="#" id="agencyDownload">JSON</a></li>
+                <span class="hidden508">End dropdown menu</span>
+              </ul>
+            </li>
+          </ul>
+
+          <h3 id="agencyName"></h3>
+          <table>
+            <tr>
+              <th>URL</th>
+              <td id="agencyUrl"></td>
+            </tr>
+            <tr>
+                <th title="Whether or not this agency is on Google Transit">Google Transit</th>
+                <td id="agencyGoogle"></td>
+            </tr>        
+            <tr>
+              <th title="ID in the National Transportation Dataset">NTD ID</th>
+              <td id="agencyNtdId"></td>
+            </tr>
+            <tr>
+              <th>Annual unlinked trips</th>
+              <td id="agencyRidership"></td>
+            </tr>
+            <tr>
+              <th>Annual passenger miles</th>
+              <td id="agencyPassengerMiles"></td>
+            </tr>
+            <tr>
+              <th>Service area population</th>
+              <td id="agencyPopulation">
+            </tr>
+          </table>
+
+          <h4>GTFS Feeds:</h4>
+          <ol id="agencyFeeds"></ol>
+
+          <a href="#" id="agencyClose">&larr; Back to table</a>
+        </div>
+      </div>
+      <div class="vspacer"></div>
+      <!--  footer -->
+      <div class="row">
+        <div class="span12">
+            <p>A project of 
+                <a href="http://www.openplans.org"><img src="images/openplans-text.png" alt="OpenPlans." /></a>
+            </p>
+            <p>
+                Data from <a href="http://www.openstreetmap.org">OpenStreetMap Contributors CC-BY-SA</a>, 
+                the <a href="http://www.ntdprogram.gov">National Transit Database</a>, 
+                the <a href="http://www.census.gov">United States Census</a>, 
+                <a href="http://www.gtfs-data-exchange.com">GTFS Data Exchange</a>, 
+                <a href="http://transit.google.com">Google</a>, and the many transit agencies
+                providing open data!
+            </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ZenDesk Feedback -->
+	<script type="text/javascript"
+		src="//assets.zendesk.com/external/zenbox/v2.5/zenbox.js"></script>
+	<style type="text/css" media="screen, projection">
+        @import url(//assets.zendesk.com/external/zenbox/v2.5/zenbox.css);
+    </style>
+	<script type="text/javascript">
+		if (typeof (Zenbox) !== "undefined") {
+			Zenbox.init({
+				dropboxID : "20085051",
+				url : "https://openplans.zendesk.com",
+				tabID : "Feedback",
+				tabColor : "black",
+				tabPosition : "Left"
+			});
+		}
+	</script>
+
+	<!-- AddThis -->
+    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50589af07e9895c9"></script>
+    <!-- Twitter direct -->
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+  </body>
+</html>
